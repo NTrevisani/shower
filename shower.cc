@@ -42,6 +42,8 @@
 #include <map>
 #include "B4Analysis.hh"
 
+#include "G4SystemOfUnits.hh"
+
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 
@@ -70,13 +72,17 @@ int main(int argc,char** argv)
   float energia;
   TString nome_file;
   
-  if ( argc == 2 )
+  if ( argc >= 2 )
   	{
 	TString argomento = (argv[1]);
 	nome_file = argomento + "GeV.root";		
   	energia = atof (argv[1]);
   	}
-  
+
+  else{
+    cout<<"please insert the energy of the incoming electrons, in GeV"<<endl;
+    return 0;
+  }  
   cout<<nome_file<<endl;
     	
   // Construct the default run manager
@@ -94,7 +100,7 @@ int main(int argc,char** argv)
   // set mandatory user action class
   
 
-  std::string name = ("/afs/cern.ch/user/n/ntrevisa/geant4/molteplice/profile_beam.root");
+  std::string name = ("/afs/cern.ch/user/n/ntrevisa/geant4/shower/profile_beam.root");
   G4VUserPrimaryGeneratorAction* gen_action = new ExG4PrimaryGeneratorAction01(name,energia);
   runManager->SetUserAction(gen_action);
 
@@ -110,7 +116,7 @@ int main(int argc,char** argv)
   
   runManager->Initialize();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
+
 #ifdef G4VIS_USE
   // Initialize visualization                                                                                                                               
   G4VisManager* visManager = new G4VisExecutive;
@@ -120,10 +126,10 @@ int main(int argc,char** argv)
 #endif
   // Get the pointer to the User Interface manager                                                                                                          
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
-  if (argc!=1) {
+  if (argc>2) {
     // batch mode                                                                                                                                           
     G4String command = "/control/execute ";
-    G4String fileName = argv[1];
+    G4String fileName = argv[2];
     UImanager->ApplyCommand(command+fileName);
   }
   else{
@@ -140,7 +146,7 @@ int main(int argc,char** argv)
 #ifdef G4VIS_USE
   delete visManager;
 #endif
-*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Get the pointer to the UI manager and set verbosities
   //
